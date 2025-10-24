@@ -78,6 +78,13 @@
   font-weight: 500;
 }
 
+.error-message {
+  color: #ff6b6b;
+  font-size: 14px;
+  margin-top: var(--spacing-xs);
+  text-align: center;
+}
+
 @media (max-width: 781px) {
   .newsletter-card {
     padding: var(--spacing-large) var(--spacing-medium);
