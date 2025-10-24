@@ -112,7 +112,7 @@ articles = [
         'id': '8',
         'title': 'Home Workouts: No Gym, No Problem',
         'excerpt': 'Effective bodyweight exercises and minimal equipment routines you can do anywhere, anytime.',
-        'content': 'You don\\'t need a fancy gym membership to stay fit and build strength. Discover effective home workout strategies.',
+        'content': 'You do not need a fancy gym membership to stay fit and build strength. Discover effective home workout strategies.',
         'category': 'Training Tips',
         'author': 'Emma Davis',
         'publishDate': datetime(2025, 7, 28),
