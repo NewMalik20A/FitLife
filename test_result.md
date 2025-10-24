@@ -246,9 +246,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Articles API Endpoints"
-    - "Categories API Endpoints"
-    - "Newsletter Subscription API"
     - "Homepage with Featured Articles"
     - "Blog Listing Page with Search & Filter"
     - "Article Detail Page"
@@ -260,3 +257,5 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: "Backend implementation complete with MongoDB models and REST API endpoints. Frontend updated to use API instead of mock data. Database seeded with 8 sample articles. Ready for comprehensive backend and frontend testing. Please test all API endpoints first, then test frontend integration including navigation, search, filtering, and newsletter subscription."
+  - agent: "testing"
+    message: "✅ BACKEND TESTING COMPLETE: All backend API endpoints tested and working perfectly. Created comprehensive test suite (/app/backend_test.py) that validates all 11 API endpoints including articles (GET all, by category, featured, by ID), categories (with counts), and newsletter (subscribe, duplicate handling, validation, get subscribers). All tests passed (11/11). Backend is production-ready. Frontend testing can now proceed."
