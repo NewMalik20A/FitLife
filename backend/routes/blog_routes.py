@@ -1,13 +1,18 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional
 from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import datetime
 import os
+from dotenv import load_dotenv
+from pathlib import Path
 
 from models.blog_models import (
     Article, ArticleCreate, ArticleUpdate,
     Category, NewsletterSubscriber, NewsletterSubscribe
 )
+
+ROOT_DIR = Path(__file__).parent.parent
+load_dotenv(ROOT_DIR / '.env')
 
 router = APIRouter()
 
