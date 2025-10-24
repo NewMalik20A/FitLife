@@ -107,51 +107,63 @@ user_problem_statement: "Build a fitness blog/content platform with articles, ca
 backend:
   - task: "MongoDB Models for Articles, Categories, Newsletter"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/models/blog_models.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Created Pydantic models for Article, Category, and NewsletterSubscriber with proper validation"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: All Pydantic models working correctly. Article model with UUID generation, proper validation, and datetime fields. Category model with count aggregation. NewsletterSubscriber with EmailStr validation - all functioning as expected."
 
   - task: "Articles API Endpoints"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/routes/blog_routes.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implemented GET /api/articles, GET /api/articles/featured, GET /api/articles/:id, POST/PUT/DELETE endpoints. Tested basic GET with curl - working"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: All articles endpoints working perfectly. GET /api/articles returns 8 articles correctly. Category filtering (?category=strength-training) returns 2 articles. GET /api/articles/featured returns 2 featured articles. GET /api/articles/{id} retrieves specific articles. Invalid IDs return proper 404 errors. All responses have correct structure and data."
 
   - task: "Categories API Endpoints"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/routes/blog_routes.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implemented GET /api/categories with dynamic count aggregation from articles collection"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Categories endpoint working correctly. GET /api/categories returns 6 categories including 'All Articles' with total count of 8. Dynamic count aggregation working properly with correct article counts per category. Response structure includes id, name, and count fields as expected."
 
   - task: "Newsletter Subscription API"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/routes/blog_routes.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implemented POST /api/newsletter/subscribe and GET /api/newsletter/subscribers with duplicate email handling"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Newsletter endpoints working perfectly. POST /api/newsletter/subscribe successfully subscribes valid emails, handles duplicates gracefully (returns existing subscriber), and properly validates email format (returns 422 for invalid emails). GET /api/newsletter/subscribers returns all subscribers with correct structure (id, email, subscribedAt)."
 
   - task: "Database Seeding"
     implemented: true
