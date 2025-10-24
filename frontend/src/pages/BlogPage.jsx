@@ -1,16 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { blogPosts, categories, getPostsByCategory } from '../mock';
+import { articlesApi, categoriesApi } from '../services/api';
 import './BlogPage.css';
 
 const BlogPage = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [articles, setArticles] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredPosts = getPostsByCategory(activeCategory).filter(post =>
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [articlesData, categoriesData] = await Promise.all([
+          articlesApi.getAll(),
+          categoriesApi.getAll()
+        ]);
+        setArticles(articlesData);
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchArticlesByCategory = async () => {
+      try {
+        setLoading(true);
+        const articlesData = await articlesApi.getAll(activeCategory === 'all' ? null : activeCategory);
+        setArticles(articlesData);
+      } catch (error) {
+        console.error('Error fetching articles:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticlesByCategory();
+  }, [activeCategory]);
+
+  const filteredPosts = articles.filter(post =>
     post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     post.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -58,7 +96,9 @@ const BlogPage = () => {
           </aside>
 
           <main className="blog-main">
-            {filteredPosts.length === 0 ? (
+            {loading ? (
+              <div className="loading-message">Loading articles...</div>
+            ) : filteredPosts.length === 0 ? (
               <div className="no-results">
                 <p className="body-large">No articles found matching your search.</p>
               </div>

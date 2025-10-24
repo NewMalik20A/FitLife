@@ -1,19 +1,55 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, User, Calendar } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { getPostById, blogPosts } from '../mock';
+import { articlesApi } from '../services/api';
 import './ArticlePage.css';
 
 const ArticlePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const article = getPostById(id);
+  const [article, setArticle] = useState(null);
+  const [relatedPosts, setRelatedPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    
+    const fetchArticle = async () => {
+      try {
+        setLoading(true);
+        const articleData = await articlesApi.getById(id);
+        setArticle(articleData);
+        
+        // Fetch related articles from same category
+        const allArticles = await articlesApi.getAll();
+        const related = allArticles
+          .filter(post => post.id !== articleData.id && post.category === articleData.category)
+          .slice(0, 3);
+        setRelatedPosts(related);
+      } catch (error) {
+        console.error('Error fetching article:', error);
+        setArticle(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticle();
   }, [id]);
+
+  if (loading) {
+    return (
+      <div className="article-page">
+        <Header />
+        <div className="container" style={{ paddingTop: '150px', textAlign: 'center' }}>
+          <p className="body-large">Loading article...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!article) {
     return (
@@ -29,10 +65,6 @@ const ArticlePage = () => {
       </div>
     );
   }
-
-  const relatedPosts = blogPosts
-    .filter(post => post.id !== article.id && post.category === article.category)
-    .slice(0, 3);
 
   return (
     <div className="article-page">

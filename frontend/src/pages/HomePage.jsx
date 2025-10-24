@@ -1,14 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, TrendingUp, Users, BookOpen } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import NewsletterSection from '../components/NewsletterSection';
-import { getFeaturedPosts } from '../mock';
+import { articlesApi } from '../services/api';
 import './HomePage.css';
 
 const HomePage = () => {
-  const featuredPosts = getFeaturedPosts();
+  const [featuredPosts, setFeaturedPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeaturedPosts = async () => {
+      try {
+        const posts = await articlesApi.getFeatured();
+        setFeaturedPosts(posts);
+      } catch (error) {
+        console.error('Error fetching featured posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedPosts();
+  }, []);
 
   return (
     <div className="home-page">
@@ -72,29 +88,35 @@ const HomePage = () => {
             <h2 className="heading-1">Featured Articles</h2>
             <p className="body-large">Handpicked stories to kickstart your fitness transformation</p>
           </div>
-          <div className="featured-grid">
-            {featuredPosts.map((post) => (
-              <Link to={`/article/${post.id}`} key={post.id} className="featured-card">
-                <div className="featured-image">
-                  <img src={post.image} alt={post.title} />
-                  <span className="category-badge">{post.category}</span>
-                </div>
-                <div className="featured-content">
-                  <h3 className="heading-3">{post.title}</h3>
-                  <p className="body-medium">{post.excerpt}</p>
-                  <div className="featured-meta">
-                    <span className="author">{post.author}</span>
-                    <span className="read-time">{post.readTime}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-          <div className="section-cta">
-            <Link to="/blog" className="btn-secondary">
-              View All Articles <ArrowRight size={18} />
-            </Link>
-          </div>
+          {loading ? (
+            <div className="loading-message">Loading articles...</div>
+          ) : (
+            <>
+              <div className="featured-grid">
+                {featuredPosts.map((post) => (
+                  <Link to={`/article/${post.id}`} key={post.id} className="featured-card">
+                    <div className="featured-image">
+                      <img src={post.image} alt={post.title} />
+                      <span className="category-badge">{post.category}</span>
+                    </div>
+                    <div className="featured-content">
+                      <h3 className="heading-3">{post.title}</h3>
+                      <p className="body-medium">{post.excerpt}</p>
+                      <div className="featured-meta">
+                        <span className="author">{post.author}</span>
+                        <span className="read-time">{post.readTime}</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              <div className="section-cta">
+                <Link to="/blog" className="btn-secondary">
+                  View All Articles <ArrowRight size={18} />
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </section>
 

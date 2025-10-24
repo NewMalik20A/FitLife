@@ -1,19 +1,30 @@
 import React, { useState } from 'react';
 import { Mail } from 'lucide-react';
-import { subscribeToNewsletter } from '../mock';
+import { newsletterApi } from '../services/api';
 import './NewsletterSection.css';
 
 const NewsletterSection = () => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (email) {
-      subscribeToNewsletter(email);
-      setSubscribed(true);
-      setEmail('');
-      setTimeout(() => setSubscribed(false), 3000);
+      try {
+        setLoading(true);
+        setError('');
+        await newsletterApi.subscribe(email);
+        setSubscribed(true);
+        setEmail('');
+        setTimeout(() => setSubscribed(false), 3000);
+      } catch (error) {
+        console.error('Error subscribing:', error);
+        setError('Failed to subscribe. Please try again.');
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -33,19 +44,23 @@ const NewsletterSection = () => {
               <p>🎉 Thanks for subscribing! Check your inbox for confirmation.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="newsletter-form">
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="newsletter-input"
-              />
-              <button type="submit" className="btn-primary">
-                Subscribe
-              </button>
-            </form>
+            <>
+              <form onSubmit={handleSubmit} className="newsletter-form">
+                <input
+                  type="email"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={loading}
+                  className="newsletter-input"
+                />
+                <button type="submit" className="btn-primary" disabled={loading}>
+                  {loading ? 'Subscribing...' : 'Subscribe'}
+                </button>
+              </form>
+              {error && <p className="error-message">{error}</p>}
+            </>
           )}
           <p className="body-small newsletter-privacy">
             We respect your privacy. Unsubscribe at any time.
