@@ -60,7 +60,7 @@ const Footer = () => {
 
         <div className="footer-bottom">
           <p className="body-small">
-            © 2025 FitLife Blog. Made with <Heart size={16} className="heart-icon" /> for fitness enthusiasts.
+            © 2025 FitLife Blog. All rights reserved.
           </p>
         </div>
       </div>
