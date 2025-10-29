@@ -1,0 +1,39 @@
+# Dependencies
+node_modules
+backend/__pycache__
+backend/.venv
+backend/venv
+
+# Environment files
+.env
+.env.local
+.env.development
+
+# Build outputs
+frontend/build
+frontend/.next
+
+# Logs
+*.log
+logs
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+
+# Git
+.git
+.gitignore
+
+# Testing
+coverage
+.pytest_cache
+
+# Misc
+test_result.md
+contracts.md
+*.md.backup
