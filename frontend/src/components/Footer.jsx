@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Github, Twitter, Instagram } from 'lucide-react';
+import { Github, Twitter, Instagram } from 'lucide-react';
 import './Footer.css';
 
 const Footer = () => {
