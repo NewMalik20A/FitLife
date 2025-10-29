@@ -13,6 +13,11 @@ services:
       - "27017:27017"
     networks:
       - fitlife-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
@@ -26,22 +31,29 @@ services:
     ports:
       - "8001:8001"
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     networks:
       - fitlife-network
-    volumes:
-      - ./backend:/app/backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/api/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   frontend:
     build:
       context: .
       dockerfile: Dockerfile.frontend
+      args:
+        - REACT_APP_BACKEND_URL=http://localhost:8001
     container_name: fitlife-frontend
     restart: always
     ports:
       - "3000:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - fitlife-network
 
